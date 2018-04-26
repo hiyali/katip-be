@@ -8,27 +8,26 @@ import (
   _ "github.com/jinzhu/gorm/dialects/mysql"
   "github.com/dgrijalva/jwt-go"
 
-  "github.com/hiyali/katip-be/database"
-  "github.com/hiyali/katip-be/models"
+  "github.com/hiyali/katip-be/config"
 )
 
 // Login with email & password
-func userLogin(c echo.Context) error {
+func UserLogin(c echo.Context) error {
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
-  db, err := database.GetDB()
+  db, err := config.GetDB()
   if err != nil {
     panic("failed to connect database")
   }
   defer db.Close()
 
-  var user models.User
+  var user config.User
   db.Where("email = ?", email).First(&user)
 
 	if password == user.Password {
 		// Set custom claims
-		claims := &models.JwtCustomClaims{
+		claims := &config.JwtCustomClaims{
 			user.Name,
 			true,
 			jwt.StandardClaims{
@@ -53,9 +52,13 @@ func userLogin(c echo.Context) error {
 }
 
 // Authorization: Bearer {TOKEN_HERE}
-func userRestricted(c echo.Context) error {
+func UserRestricted(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*models.JwtCustomClaims)
+	claims := user.Claims.(*config.JwtCustomClaims)
 	name := claims.Name
 	return c.String(http.StatusOK, "Welcome "+name+"!")
+}
+
+func Accessible(c echo.Context) error {
+	return c.String(http.StatusOK, "Accessible")
 }

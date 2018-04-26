@@ -1,4 +1,4 @@
-package models
+package config
 
 import (
   "github.com/jinzhu/gorm"
@@ -8,22 +8,20 @@ import (
 
 type User struct {
   gorm.Model
-  Id string
-  Email string
-  Password string
-  Name string
+  Email     string
+  Password  string
+  Name      string
 }
 
 type Record struct {
   gorm.Model
-  Id string
-  Email string
-  Password string
-  Name string
+  Email     string
+  Password  string
+  Name      string
 }
 
 type JwtCustomClaims struct {
-	Name  string `json:"name"`
-	Login bool   `json:"login"`
-	jwt.StandardClaims
+  Name  string `json:"name"`
+  Login bool   `json:"login"`
+  jwt.StandardClaims
 }

@@ -15,7 +15,7 @@ func main() {
 
 	e.GET("/", hello)
 
-  RegisterRouters(e)
+  routerRegister(e)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":5555"))
