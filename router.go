@@ -9,17 +9,21 @@ import (
 )
 
 func routerRegister (e *echo.Echo) {
-  // Login route
-  e.POST("/login", handlers.UserLogin)
+  // Home
+  e.GET("/", handlers.Home)
 
-  // Unauthenticated route
-  e.GET("/", handlers.Accessible)
+  // Auth
+  userGroup := e.Group("/user")
+  userGroup.POST("/login", handlers.UserLogin)
+  // userGroup.POST("logout", handlers.UserLogout) // server side logout
 
-  // Restricted group
-  r := e.Group("/restricted")
-
-  // Configure middleware with the custom claims type
+  // Record (need login)
+  recordGroup := e.Group("/record")
   jwtConfig := config.GetJwtConfig()
-  r.Use(middleware.JWTWithConfig(jwtConfig))
-  r.GET("", handlers.UserRestricted)
+  recordGroup.Use(middleware.JWTWithConfig(jwtConfig))
+  recordGroup.GET("", handlers.RecordGetAllPageable)
+  recordGroup.POST("", handlers.RecordCreateOne)
+  recordGroup.GET("/:id", handlers.RecordGetOne)
+  recordGroup.PUT("/:id", handlers.RecordUpdateOne)
+  recordGroup.DELETE("/:id", handlers.RecordDeleteOne)
 }

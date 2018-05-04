@@ -5,21 +5,19 @@ import (
   "net/http"
 
 	"github.com/labstack/echo"
-  _ "github.com/jinzhu/gorm/dialects/mysql"
   "github.com/dgrijalva/jwt-go"
 
   "github.com/hiyali/katip-be/config"
 )
+
+// return errors.New("failed to connect database")
 
 // Login with email & password
 func UserLogin(c echo.Context) error {
 	email := c.FormValue("email")
 	password := c.FormValue("password")
 
-  db, err := config.GetDB()
-  if err != nil {
-    panic("failed to connect database")
-  }
+  db := config.GetDB()
   defer db.Close()
 
   var user config.User
@@ -28,8 +26,8 @@ func UserLogin(c echo.Context) error {
 	if password == user.Password {
 		// Set custom claims
 		claims := &config.JwtCustomClaims{
+      user.ID,
 			user.Name,
-			true,
 			jwt.StandardClaims{
 				ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 			},
@@ -49,16 +47,4 @@ func UserLogin(c echo.Context) error {
 	}
 
 	return echo.ErrUnauthorized
-}
-
-// Authorization: Bearer {TOKEN_HERE}
-func UserRestricted(c echo.Context) error {
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*config.JwtCustomClaims)
-	name := claims.Name
-	return c.String(http.StatusOK, "Welcome "+name+"!")
-}
-
-func Accessible(c echo.Context) error {
-	return c.String(http.StatusOK, "Accessible")
 }

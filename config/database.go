@@ -2,20 +2,19 @@ package config
 
 import (
   "fmt"
-  "errors"
 
   "github.com/jinzhu/gorm"
   _ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-func GetDB() (*gorm.DB, error) {
+func GetDB() *gorm.DB {
   // db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1?charset=utf8&parseTime=True&loc=Local")
-  db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1")
+  db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1?charset=utf8&parseTime=true")
 	// db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
 	// [username[:password]@][protocol[(address)]]/dbname[?param1=value1&...&paramN=valueN]
 	if err != nil {
 		fmt.Printf("error %v\n", err)
-		return nil, errors.New("failed to connect database")
+		panic("failed to connect database")
 	}
 
 	// gorm DB settings ----------------------------------------------
@@ -54,14 +53,11 @@ func GetDB() (*gorm.DB, error) {
 		// gorm Transaction example ----------------------------------------------
 	*/
 
-	return db, nil
+	return db
 }
 
-func GetTable(tableName string) (*gorm.DB, error) {
-	db, err := GetDB()
-  if err != nil {
-    return nil, err
-  }
+func GetTable(tableName string) *gorm.DB {
+	db := GetDB()
 	db.Select(tableName)
-	return db, nil
+	return db
 }
