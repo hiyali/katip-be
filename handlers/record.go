@@ -12,22 +12,6 @@ import (
 // Authorization: Bearer {TOKEN_HERE}
 // return errors.New("failed to connect database")
 
-// get positive integer from form value
-/*
-func getPosInt(c echo.Context, name string) (int, string) {
-	intParam, err := strconv.Atoi(c.FormValue(name))
-
-  if err != nil {
-    return -1, fmt.Sprintf("Param %v is not a integer", name)
-  }
-
-  if intParam < 1 {
-    return -1, fmt.Sprintf("Param %v can't be a negative integer", name)
-  }
-
-  return intParam, ""
-} // */
-
 /*
   @page  positive integer
   @limit positive integer
@@ -35,7 +19,7 @@ func getPosInt(c echo.Context, name string) (int, string) {
   return [record...]
 */
 func RecordGetAllPageable(c echo.Context) (err error) {
-  pageable := new(config.PageableParam)
+  pageable := new(config.ParamPageable)
   if err = c.Bind(pageable); err != nil {
     return
   }
@@ -72,7 +56,7 @@ func RecordCreateOne(c echo.Context) (err error) {
   defer db.Close()
 
   if err := db.Create(&record).Error; err != nil {
-    return c.JSON(http.StatusOK, echo.Map{
+    return c.JSON(http.StatusBadRequest, echo.Map{
       "message": err,
     })
   } else {
@@ -118,7 +102,7 @@ func RecordUpdateOne(c echo.Context) (err error) {
 
   var recordModel config.Record
   if err := db.Model(&recordModel).Where("creator_id = ? AND id = ?", claims.ID, id).Updates(record).Error; err != nil {
-    return c.JSON(http.StatusOK, echo.Map{
+    return c.JSON(http.StatusBadRequest, echo.Map{
       "message": err,
     })
   } else {

@@ -9,21 +9,35 @@ import (
 )
 
 func routerRegister (e *echo.Echo) {
+  e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+    Skipper:      middleware.DefaultSkipper,
+    AllowOrigins: []string{"*"},
+    AllowMethods: []string{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE, echo.OPTIONS},
+  }))
+
   // Home
   e.GET("/", handlers.Home)
 
   // Auth
-  userGroup := e.Group("/user")
-  userGroup.POST("/login", handlers.UserLogin)
-  // userGroup.POST("logout", handlers.UserLogout) // server side logout
+  e.POST("/auth/login", handlers.AuthLogin)
 
-  // Record (need login)
-  recordGroup := e.Group("/record")
+  // JWT config
   jwtConfig := config.GetJwtConfig()
-  recordGroup.Use(middleware.JWTWithConfig(jwtConfig))
-  recordGroup.GET("", handlers.RecordGetAllPageable)
-  recordGroup.POST("", handlers.RecordCreateOne)
-  recordGroup.GET("/:id", handlers.RecordGetOne)
-  recordGroup.PUT("/:id", handlers.RecordUpdateOne)
-  recordGroup.DELETE("/:id", handlers.RecordDeleteOne)
+
+  // User Group (need login)
+  ug := e.Group("/user")
+  ug.Use(middleware.JWTWithConfig(jwtConfig))
+  ug.GET("", handlers.UserGetInfo)
+  // ug.PUT("", handlers.UserUpdateInfo)
+  // ug.POST("", handlers.UserCreate)
+  // ug.POST("/logout", handlers.UserLogout) // server side logout
+
+  // Record Group (need login)
+  rg := e.Group("/record")
+  rg.Use(middleware.JWTWithConfig(jwtConfig))
+  rg.GET("", handlers.RecordGetAllPageable)
+  rg.POST("", handlers.RecordCreateOne)
+  rg.GET("/:id", handlers.RecordGetOne)
+  rg.PUT("/:id", handlers.RecordUpdateOne)
+  rg.DELETE("/:id", handlers.RecordDeleteOne)
 }
