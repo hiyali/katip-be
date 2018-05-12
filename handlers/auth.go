@@ -6,6 +6,7 @@ import (
 
   "github.com/labstack/echo"
   "github.com/dgrijalva/jwt-go"
+  "golang.org/x/crypto/bcrypt"
 
   "github.com/hiyali/katip-be/config"
 )
@@ -34,37 +35,36 @@ func AuthLogin(c echo.Context) (err error) {
     })
   }
 
-  if loginParams.Password == user.Password {
-    // Set custom claims
-    claims := &config.JwtCustomClaims{
-      user.ID,
-      user.Name,
-      user.Email,
-      jwt.StandardClaims{
-        ExpiresAt: time.Now().Add(time.Hour * 24 * 5).Unix(),
-      },
-    }
+  if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginParams.Password)); err != nil {
+    return echo.ErrUnauthorized
+  }
 
-    // Create token with claims
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+  // Set custom claims
+  claims := &config.JwtCustomClaims{
+    user.ID,
+    user.Email,
+    jwt.StandardClaims{
+      ExpiresAt: time.Now().Add(time.Hour * 24 * 5).Unix(),
+    },
+  }
 
-    // Generate encoded token and send it as response.
-    t, err := token.SignedString([]byte("katip_known_secret"))
-    if err != nil {
-      return c.JSON(http.StatusBadRequest, echo.Map{
-        "message": err,
-      })
-    }
+  // Create token with claims
+  token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-    return c.JSON(http.StatusOK, echo.Map{
-      "token": t,
-      "userInfo": config.JsonUser{
-        ID: user.ID,
-        Name: user.Name,
-        Email: user.Email,
-      },
+  // Generate encoded token and send it as response.
+  t, err := token.SignedString([]byte("katip_known_secret"))
+  if err != nil {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
     })
   }
 
-  return echo.ErrUnauthorized
+  return c.JSON(http.StatusOK, echo.Map{
+    "token": t,
+    "userInfo": config.JsonUser{
+      ID: user.ID,
+      Name: user.Name,
+      Email: user.Email,
+    },
+  })
 }

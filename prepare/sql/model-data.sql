@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
 	`email` varchar(100) NOT NULL,
-	`password` varchar(32) NOT NULL,
+	`password` varchar(64) NOT NULL,
 	`name` varchar(64) NOT NULL,
 	`created_at` DATETIME NOT NULL,
 	`updated_at` DATETIME,
@@ -27,7 +27,7 @@ CREATE TABLE `users` (
 
 ALTER TABLE `records` ADD CONSTRAINT `records_fk0` FOREIGN KEY (`creator_id`) REFERENCES `users`(`id`);
 
-/* Writting data */
+/* Writting data (password: non-secure) */
 LOCK TABLES `users` WRITE;
-INSERT INTO `users` VALUES (1,'hiyali920@gmail.com','non-secure','Salam Hiyali', NOW(), null, null);
+INSERT INTO `users` VALUES (1,'hiyali920@gmail.com','$2a$10$u8/65CcvmYJMV5l8w/8Or..h4pB.3m4KCdemBY788UCRr54GDjIfW','Salam Hiyali', NOW(), null, null);
 UNLOCK TABLES;

@@ -2,10 +2,14 @@ package config
 
 type (
   JsonUser struct {
-    ID        uint `gorm:"primary_key" json:"id"`
+    ID        uint `gorm:"primary_key" json:"id" valid:"-"`
 
-    Name      string  `gorm:"type:varchar(64);not null" json:"name"`
-    Email     string  `gorm:"type:varchar(100);unique_index;not null" json:"email"`
+    Name      string  `gorm:"type:varchar(64);not null" json:"name" form:"name" valid:"required"`
+    Email     string  `gorm:"type:varchar(100);unique_index;not null" json:"email" form:"email" valid:"required,email"`
+  }
+  JsonUserPut struct {
+    Name      string  `gorm:"type:varchar(64);not null" json:"name" form:"name" valid:"optional"`
+    Password  string  `gorm:"type:varchar(64);not null" form:"password" valid:"optional,length(6|20)"`
   }
 
   JsonRecord struct {

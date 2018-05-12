@@ -15,7 +15,7 @@ type (
 
     Name      string  `gorm:"type:varchar(64);not null" form:"name" json:"name"`
     Email     string  `gorm:"type:varchar(100);unique_index;not null" form:"email" json:"email"`
-    Password  string  `gorm:"type:varchar(32);not null" form:"password"`
+    Password  string  `gorm:"type:varchar(64);not null" form:"password"`
   }
 
   Record struct {
@@ -33,7 +33,6 @@ type (
 
   JwtCustomClaims struct {
     ID    uint   `json:"id"`
-    Name  string `json:"name"`
     Email string `json:"email"`
     jwt.StandardClaims
   }
