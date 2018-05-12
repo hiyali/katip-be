@@ -3,7 +3,7 @@ package handlers
 import (
   "net/http"
 
-	"github.com/labstack/echo"
+  "github.com/labstack/echo"
   "github.com/dgrijalva/jwt-go"
 
   "github.com/hiyali/katip-be/config"
@@ -13,22 +13,27 @@ import (
 // return errors.New("failed to connect database")
 
 /*
-  @page  positive integer
-  @limit positive integer
+@page  positive integer
+@limit positive integer
 
-  return [record...]
+return [record...]
 */
+
 func RecordGetAllPageable(c echo.Context) (err error) {
   pageable := new(config.ParamPageable)
   if err = c.Bind(pageable); err != nil {
-    return
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
   }
-  // if err = c.Validate(pageable); err != nil {
-  //   return
-  // }
+  if err = c.Validate(pageable); err != nil {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
+  }
 
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*config.JwtCustomClaims)
+  user := c.Get("user").(*jwt.Token)
+  claims := user.Claims.(*config.JwtCustomClaims)
 
   db := config.GetDB()
   defer db.Close()
@@ -42,14 +47,18 @@ func RecordGetAllPageable(c echo.Context) (err error) {
 func RecordCreateOne(c echo.Context) (err error) {
   record := new(config.Record)
   if err = c.Bind(record); err != nil {
-    return
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
   }
-  // if err = c.Validate(record); err != nil {
-  //   return
-  // }
+  if err = c.Validate(record); err != nil {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
+  }
 
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*config.JwtCustomClaims)
+  user := c.Get("user").(*jwt.Token)
+  claims := user.Claims.(*config.JwtCustomClaims)
   record.CreatorId = claims.ID
 
   db := config.GetDB()
@@ -67,8 +76,8 @@ func RecordCreateOne(c echo.Context) (err error) {
 func RecordGetOne(c echo.Context) (err error) {
   id := c.Param("id")
 
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*config.JwtCustomClaims)
+  user := c.Get("user").(*jwt.Token)
+  claims := user.Claims.(*config.JwtCustomClaims)
 
   db := config.GetDB()
   defer db.Close()
@@ -88,14 +97,18 @@ func RecordUpdateOne(c echo.Context) (err error) {
 
   record := new(config.Record)
   if err = c.Bind(record); err != nil {
-    return
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
   }
-  // if err = c.Validate(record); err != nil {
-  //   return
-  // }
+  if err = c.Validate(record); err != nil {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
+  }
 
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*config.JwtCustomClaims)
+  user := c.Get("user").(*jwt.Token)
+  claims := user.Claims.(*config.JwtCustomClaims)
 
   db := config.GetDB()
   defer db.Close()
@@ -113,8 +126,8 @@ func RecordUpdateOne(c echo.Context) (err error) {
 func RecordDeleteOne(c echo.Context) (err error) {
   id := c.Param("id")
 
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*config.JwtCustomClaims)
+  user := c.Get("user").(*jwt.Token)
+  claims := user.Claims.(*config.JwtCustomClaims)
 
   db := config.GetDB()
   defer db.Close()
