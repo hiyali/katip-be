@@ -1,32 +1,46 @@
 package utils
 
-import (
-  "math/rand"
-)
+import "math/rand"
 
-var Sources = map[uint]string{
-  1: "abcdefghijklmnopqrstuvwxyz", // LowerLetters
-  2: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", // UpperLetters
-  3: "0123456789", // Digits
-  4: "~!@#$%^&*()_+`-={}|[]\\:\"<>?,./", // Symbols
+var Sources = map[string]string{
+  "LowerLetters": "abcdefghijklmnopqrstuvwxyz", // LowerLetters
+  "UpperLetters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ", // UpperLetters
+  "Digits": "0123456789", // Digits
+  "Symbols": "~!@#$%^&*()_+`-={}|[]\\:\"<>?,./", // Symbols
 }
 
-const (
-  LowerLetters = 1
-  UpperLetters
-  Digits
-  Symbols
-)
+type SourceTypes struct {
+  All           bool
+  LowerLetters  bool
+  UpperLetters  bool
+  Digits        bool
+  Symbols       bool
+}
 
-func getSource(sourceTypes []uint) (result string) {
-  for i := 0; i < len(sourceTypes); i++ {
-    result += Sources[sourceTypes[i]]
+func getSource(st SourceTypes) (result string) {
+  if st.All {
+    for _, value := range Sources {
+      result += value
+    }
+  } else {
+    if st.UpperLetters {
+      result += Sources["UpperLetters"]
+    }
+    if st.LowerLetters {
+      result += Sources["LowerLetters"]
+    }
+    if st.Digits {
+      result += Sources["Digits"]
+    }
+    if st.Symbols {
+      result += Sources["Symbols"]
+    }
   }
   return
 }
 
-func GeneratePassword(len int) (result string) {
-  sourceStr := getSource([]uint{1,2,3,4})
+func GeneratePassword(len int, st SourceTypes) (result string) {
+  sourceStr := getSource(st)
   for i := 0; i < len; i++ {
     result += randomItem(sourceStr)
   }

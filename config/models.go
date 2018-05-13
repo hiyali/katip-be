@@ -14,7 +14,7 @@ type (
     DeletedAt *time.Time `sql:"index"`
 
     Name      string  `gorm:"type:varchar(64);not null" form:"name" json:"name"`
-    Email     string  `gorm:"type:varchar(100);unique_index;not null" form:"email" json:"email"`
+    Email     string  `gorm:"type:varchar(100);unique;index;not null" form:"email" json:"email"`
     Password  string  `gorm:"type:varchar(64);not null" form:"password"`
   }
 

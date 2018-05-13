@@ -1,5 +1,7 @@
 package config
 
+import "time"
+
 type (
   JsonUser struct {
     ID        uint `gorm:"primary_key" json:"id" valid:"-"`
@@ -8,6 +10,8 @@ type (
     Email     string  `gorm:"type:varchar(100);unique_index;not null" json:"email" form:"email" valid:"required,email"`
   }
   JsonUserPut struct {
+    UpdatedAt time.Time
+
     Name      string  `gorm:"type:varchar(64);not null" json:"name" form:"name" valid:"optional"`
     Password  string  `gorm:"type:varchar(64);not null" form:"password" valid:"optional,length(6|20)"`
   }
