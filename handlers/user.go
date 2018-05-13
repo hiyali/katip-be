@@ -7,10 +7,45 @@ import (
   "github.com/labstack/echo"
   "github.com/dgrijalva/jwt-go"
   "golang.org/x/crypto/bcrypt"
+  "github.com/roylee0704/gron"
 
   "github.com/hiyali/katip-be/config"
   "github.com/hiyali/katip-be/utils"
 )
+
+type (
+  EmailTokenStore struct {
+    Name        string
+    Email       string
+    CreatedAt   time.Time
+    ExpiredAt   time.Time
+  }
+  Reminder struct {}
+)
+
+var emailTokenStore map[string]EmailTokenStore
+
+const (
+  TokenLength = 40
+)
+
+func (r Reminder) Run() {
+  for token, val := range emailTokenStore {
+    if len(val.Email) == 0 || val.ExpiredAt.Unix() < time.Now().Unix() {
+      delete(emailTokenStore, token)
+    }
+  }
+}
+
+func init() {
+  emailTokenStore = make(map[string]EmailTokenStore)
+
+  // cron job
+  r := Reminder{}
+  c := gron.New()
+  c.Add(gron.Every(2 * time.Minute), r)
+  c.Start()
+}
 
 func UserRegister(c echo.Context) (err error) {
   user := new(config.JsonUser)
@@ -40,7 +75,51 @@ func UserRegister(c echo.Context) (err error) {
     })
   }
 
-  newPassword := utils.GeneratePassword(12, utils.SourceTypes{All:true})
+  token := utils.GenerateRandomStr(TokenLength, utils.SourceTypes{LowerLetters: true, UpperLetters: true, Digits: true})
+  if err := utils.SendRegisterConfirmEmail(user.Email, user.Name, token); err != nil {
+    return c.JSON(http.StatusInternalServerError, echo.Map{
+      "message": err,
+    })
+  }
+
+  emailTokenStore[token] = EmailTokenStore{
+    Name: user.Name,
+    Email: user.Email,
+    CreatedAt: time.Now(),
+    ExpiredAt: time.Now().Add(time.Duration(30) * time.Minute),
+  }
+
+  return c.JSON(http.StatusOK, echo.Map{
+    "message": "Confirm email send!",
+  })
+}
+
+func UserRegisterConfirm(c echo.Context) (err error) {
+  Token := c.QueryParam("token")
+
+  ets := emailTokenStore[Token]
+  if len(ets.Email) == 0 || ets.ExpiredAt.Unix() < time.Now().Unix() {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": "Token expired!",
+    })
+  }
+
+  db := config.GetDB()
+  defer db.Close()
+
+  var count uint
+  if err := db.Model(&config.User{}).Where("email = ?", ets.Email).Count(&count).Error; err != nil {
+    return c.JSON(http.StatusInternalServerError, echo.Map{
+      "message": err,
+    })
+  }
+  if count > 0 {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": "This email already exist!",
+    })
+  }
+
+  newPassword := utils.GenerateRandomStr(12, utils.SourceTypes{All:true})
   hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
   if err != nil {
     return c.JSON(http.StatusInternalServerError, echo.Map{
@@ -51,8 +130,8 @@ func UserRegister(c echo.Context) (err error) {
   userInfo := config.User{
     CreatedAt: time.Now(),
 
-    Name: user.Name,
-    Email: user.Email,
+    Name: ets.Name,
+    Email: ets.Email,
     Password: string(hashedPassword),
   }
 
@@ -60,21 +139,16 @@ func UserRegister(c echo.Context) (err error) {
     return c.JSON(http.StatusBadRequest, echo.Map{
       "message": err,
     })
-  } else {
-    if err := utils.SendRegisterEmail(user.Email, user.Name, newPassword); err != nil {
-      return c.JSON(http.StatusInternalServerError, echo.Map{
-        "message": err,
-      })
-    }
-
-    return c.JSON(http.StatusOK, echo.Map{
-      "userInfo": config.JsonUser{
-        ID: userInfo.ID,
-        Name: userInfo.Name,
-        Email: userInfo.Email,
-      },
-    })
   }
+
+  return c.JSON(http.StatusOK, echo.Map{
+    "userInfo": config.JsonUser{
+      ID: userInfo.ID,
+      Name: userInfo.Name,
+      Email: userInfo.Email,
+    },
+    "password": newPassword,
+  })
 }
 
 func UserGetOne(c echo.Context) (err error) {

@@ -1,7 +1,6 @@
 package utils
 
 import (
-  "log"
   "fmt"
   "time"
   "net"
@@ -61,7 +60,7 @@ func getConfiguredEmail() hermes.Hermes {
   }
 }
 
-func SendRegisterEmail(userEmail string, userName string, userPassword string) (err error) {
+func SendRegisterConfirmEmail(userEmail string, userName string, token string) (err error) {
   // body
   hermesEmail := hermes.Email{
     Body: hermes.Body{
@@ -74,8 +73,8 @@ func SendRegisterEmail(userEmail string, userName string, userPassword string) (
           Instructions: "Click the button below to reset your password:",
           Button: hermes.Button{
             Color: "#DC4D2F",
-            Text:  "Reset your password: " + userPassword,
-            Link:  prdConf.Link + "reset-password?token=d9729feb74992cc3482b350163a1a010",
+            Text:  "Confirm Register",
+            Link:  prdConf.Link + "register-confirm?token=" + token,
           },
         },
       },
@@ -134,7 +133,6 @@ func Dial(addr string) (*smtp.Client, error) {
 func SendMailUsingTLS(addr string, auth smtp.Auth, from string, to []string, msg []byte) (err error) {
   c, err := Dial(addr)
   if err != nil {
-    log.Println("SendMailUsingTLS Dial", err)
     return err
   }
   defer c.Close()

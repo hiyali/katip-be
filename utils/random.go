@@ -39,7 +39,7 @@ func getSource(st SourceTypes) (result string) {
   return
 }
 
-func GeneratePassword(len int, st SourceTypes) (result string) {
+func GenerateRandomStr(len int, st SourceTypes) (result string) {
   sourceStr := getSource(st)
   for i := 0; i < len; i++ {
     result += randomItem(sourceStr)

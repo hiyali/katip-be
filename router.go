@@ -27,6 +27,7 @@ func routerRegister (e *echo.Echo) {
 
   // User Register
   e.POST("/register", handlers.UserRegister)
+  e.GET("/register-confirm", handlers.UserRegisterConfirm)
   // User Group (need login)
   ug := e.Group("/user")
   ug.Use(middleware.JWTWithConfig(jwtConfig))
