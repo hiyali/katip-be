@@ -1,6 +1,7 @@
 package handlers
 
 import (
+  "time"
   "net/http"
 
   "github.com/labstack/echo"
@@ -39,13 +40,13 @@ func RecordGetAllPageable(c echo.Context) (err error) {
   defer db.Close()
 
   var records []config.Record
-  db.Where("creator_id = ?", claims.ID).Limit(pageable.Limit).Offset(pageable.Limit * (pageable.Page - 1)).Find(&records)
+  db.Where("creator_id = ?", claims.ID).Limit(pageable.Limit).Offset(pageable.Skip).Find(&records)
 
   return c.JSON(http.StatusOK, records)
 }
 
 func RecordCreateOne(c echo.Context) (err error) {
-  record := new(config.Record)
+  record := new(config.JsonRecord)
   if err = c.Bind(record); err != nil {
     return c.JSON(http.StatusBadRequest, echo.Map{
       "message": err,
@@ -59,16 +60,26 @@ func RecordCreateOne(c echo.Context) (err error) {
 
   user := c.Get("user").(*jwt.Token)
   claims := user.Claims.(*config.JwtCustomClaims)
-  record.CreatorId = claims.ID
+
+  recordInfo := config.Record{
+    CreatorId: claims.ID,
+    CreatedAt: time.Now(),
+
+    Title: record.Title,
+    IconUrl: record.IconUrl,
+    Content: record.Content,
+    Type: record.Type,
+  }
 
   db := config.GetDB()
   defer db.Close()
 
-  if err := db.Create(&record).Error; err != nil {
+  if err := db.Create(&recordInfo).Error; err != nil {
     return c.JSON(http.StatusBadRequest, echo.Map{
       "message": err,
     })
   } else {
+    record.ID = recordInfo.ID
     return c.JSON(http.StatusOK, record)
   }
 }
@@ -95,7 +106,7 @@ func RecordGetOne(c echo.Context) (err error) {
 func RecordUpdateOne(c echo.Context) (err error) {
   id := c.Param("id")
 
-  record := new(config.Record)
+  record := new(config.JsonRecord)
   if err = c.Bind(record); err != nil {
     return c.JSON(http.StatusBadRequest, echo.Map{
       "message": err,
@@ -113,8 +124,13 @@ func RecordUpdateOne(c echo.Context) (err error) {
   db := config.GetDB()
   defer db.Close()
 
-  var recordModel config.Record
-  if err := db.Model(&recordModel).Where("creator_id = ? AND id = ?", claims.ID, id).Updates(record).Error; err != nil {
+  recordInfo := config.Record{
+    Title: record.Title,
+    IconUrl: record.IconUrl,
+    Content: record.Content,
+    Type: record.Type,
+  }
+  if err := db.Model(&recordInfo).Where("creator_id = ? AND id = ?", claims.ID, id).Updates(recordInfo).Error; err != nil {
     return c.JSON(http.StatusBadRequest, echo.Map{
       "message": err,
     })

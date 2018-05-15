@@ -11,6 +11,8 @@ var Sources = map[string]string{
 
 type SourceTypes struct {
   All           bool
+  CustomString  string
+
   LowerLetters  bool
   UpperLetters  bool
   Digits        bool
@@ -35,6 +37,9 @@ func getSource(st SourceTypes) (result string) {
     if st.Symbols {
       result += Sources["Symbols"]
     }
+  }
+  if len(st.CustomString) > 0 {
+    result += st.CustomString
   }
   return
 }

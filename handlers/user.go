@@ -17,6 +17,7 @@ type (
   EmailTokenStore struct {
     Name        string
     Email       string
+    Password    string
     CreatedAt   time.Time
     ExpiredAt   time.Time
   }
@@ -48,7 +49,7 @@ func init() {
 }
 
 func UserRegister(c echo.Context) (err error) {
-  user := new(config.JsonUser)
+  user := new(config.JsonUserPost)
   if err = c.Bind(user); err != nil {
     return c.JSON(http.StatusBadRequest, echo.Map{
       "message": err,
@@ -85,6 +86,7 @@ func UserRegister(c echo.Context) (err error) {
   emailTokenStore[token] = EmailTokenStore{
     Name: user.Name,
     Email: user.Email,
+    Password: user.Password,
     CreatedAt: time.Now(),
     ExpiredAt: time.Now().Add(time.Duration(30) * time.Minute),
   }
@@ -119,8 +121,7 @@ func UserRegisterConfirm(c echo.Context) (err error) {
     })
   }
 
-  newPassword := utils.GenerateRandomStr(12, utils.SourceTypes{All:true})
-  hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+  hashedPassword, err := bcrypt.GenerateFromPassword([]byte(ets.Password), bcrypt.DefaultCost)
   if err != nil {
     return c.JSON(http.StatusInternalServerError, echo.Map{
       "message": err,
@@ -147,7 +148,6 @@ func UserRegisterConfirm(c echo.Context) (err error) {
       Name: userInfo.Name,
       Email: userInfo.Email,
     },
-    "password": newPassword,
   })
 }
 

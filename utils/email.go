@@ -66,22 +66,22 @@ func SendRegisterConfirmEmail(userEmail string, userName string, token string) (
     Body: hermes.Body{
       Name: userName,
       Intros: []string{
-        "You have received this email because a password reset request for Katip account was received.",
+        "You have received this email because a register request for Katip account was received.",
       },
       Actions: []hermes.Action{
         {
-          Instructions: "Click the button below to reset your password:",
+          Instructions: "Click the button below to finish register request:",
           Button: hermes.Button{
-            Color: "#DC4D2F",
+            Color: "#22BC66",
             Text:  "Confirm Register",
             Link:  prdConf.Link + "register-confirm?token=" + token,
           },
         },
       },
       Outros: []string{
-        "If you did not request a password reset, no further action is required on your part.",
+        "If you did not request register the Katip, no further action is required on your part.",
       },
-      Signature: "Thanks!",
+      Signature: "Thanks",
     },
   }
 
@@ -102,7 +102,7 @@ func SendRegisterConfirmEmail(userEmail string, userName string, token string) (
   header := make(map[string]string)
   header["From"] = "Katip Team" + "<" + emailConf.Address + ">"
   header["To"] = userEmail
-  header["Subject"] = "Congratulations! You registered the Katip product."
+  header["Subject"] = "You are bing register the Katip."
   header["Content-Type"] = "text/html; charset=UTF-8"
 
   // message
