@@ -33,6 +33,10 @@ func RecordGetAllPageable(c echo.Context) (err error) {
     })
   }
 
+  if pageable.Limit == 0 {
+    pageable.Limit = 20
+  }
+
   user := c.Get("user").(*jwt.Token)
   claims := user.Claims.(*config.JwtCustomClaims)
 

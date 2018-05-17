@@ -54,7 +54,7 @@ func getConfiguredEmail() hermes.Hermes {
     Product: hermes.Product{
       Name: prdConf.Name,
       Link: prdConf.Link,
-      // Logo: "http://katip.hiyali.org/assets/logo.png",
+      // Logo: "https://katip.hiyali.org/assets/logo.png",
       Copyright: prdConf.Copyright(),
     },
   }
