@@ -23,20 +23,20 @@ func routerRegister (e *echo.Echo) {
   e.GET("/", handlers.Home)
 
   // Auth
-  e.POST("/auth/login", handlers.AuthLogin)
+  e.POST("/api/auth/login", handlers.AuthLogin)
 
   // User Register
-  e.POST("/register", handlers.UserRegister)
+  e.POST("/api/register", handlers.UserRegister)
   e.GET("/register-confirm", handlers.UserRegisterConfirm)
   // User Group (need login)
-  ug := e.Group("/user")
+  ug := e.Group("/api/user")
   ug.Use(middleware.JWTWithConfig(jwtConfig))
   ug.GET("", handlers.UserGetOne)
   ug.PUT("", handlers.UserUpdateOne)
   // ug.POST("/logout", handlers.UserLogout) // server side logout
 
   // Record Group (need login)
-  rg := e.Group("/record")
+  rg := e.Group("/api/record")
   rg.Use(middleware.JWTWithConfig(jwtConfig))
   rg.GET("", handlers.RecordGetAllPageable)
   rg.POST("", handlers.RecordCreateOne)
