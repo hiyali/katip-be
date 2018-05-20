@@ -74,7 +74,7 @@ func SendRegisterConfirmEmail(userEmail string, userName string, token string) (
           Button: hermes.Button{
             Color: "#22BC66",
             Text:  "Confirm Register",
-            Link:  prdConf.Link + "register-confirm?token=" + token,
+            Link:  prdConf.Link + "api/register-confirm?token=" + token,
           },
         },
       },
