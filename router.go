@@ -19,8 +19,8 @@ func routerRegister (e *echo.Echo) {
     AllowMethods: []string{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE, echo.OPTIONS},
   }))
 
-  // Home
-  e.GET("/", handlers.Home)
+  // Ping
+  e.GET("/api/ping", handlers.Ping)
 
   // Auth
   e.POST("/api/auth/login", handlers.AuthLogin)
