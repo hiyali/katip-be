@@ -143,6 +143,7 @@ func UserRegisterConfirm(c echo.Context) (err error) {
   }
 
   return c.JSON(http.StatusOK, echo.Map{
+    "message": "Register confirmed",
     "userInfo": config.JsonUser{
       ID: userInfo.ID,
       Name: userInfo.Name,
