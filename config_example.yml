@@ -1,0 +1,16 @@
+app:
+  name:     Katip
+  link:     https://katip.hiyali.org/
+  secret:   katip_known_secret
+
+db:
+  name:     katip_v1
+  user:     katip_mysql_admin
+  password: katip_v1_pass
+
+email:
+  name:       Katip team
+  address:    katip-team@hiyali.org
+  password:   non-secure
+  serverhost: smtp.hiyali.org
+  serverport: 994

@@ -2,71 +2,38 @@ package utils
 
 import (
   "fmt"
-  "time"
   "net"
   "net/smtp"
   "crypto/tls"
 
   // "github.com/scorredoira/email"
   "github.com/matcornic/hermes"
+
+  "github.com/hiyali/katip-be/config"
 )
-
-type (
-  ProductConfig struct {
-    Name  string
-    Link  string
-  }
-
-  EmailConfig struct {
-    Address    string
-    Password   string
-    ServerHost string
-    ServerPort uint
-  }
-)
-
-func (pc *ProductConfig) Copyright() string {
-  return fmt.Sprintf("Copyright © %v %v. All rights reserved.", time.Now().Year(), pc.Name)
-}
-
-func (ec *EmailConfig) HostName() string {
-  return fmt.Sprintf("%v:%v", ec.ServerHost, ec.ServerPort)
-}
-
-var prdConf ProductConfig
-var emailConf EmailConfig
-
-func init() {
-  prdConf = ProductConfig{
-    Name: "Katip",
-    Link: "https://katip.hiyali.org/",
-  }
-  emailConf = EmailConfig{
-    Address   : "katip-team@hiyali.org", // "salam.14@163.com",
-    Password  : "non-secure",
-    ServerHost: "smtp.hiyali.org", // "smtp.163.com",
-    ServerPort: 994,
-  }
-}
 
 func getConfiguredEmail() hermes.Hermes {
+  cf := config.Get()
+
   return hermes.Hermes{
     Product: hermes.Product{
-      Name: prdConf.Name,
-      Link: prdConf.Link,
+      Name: cf.App.Name,
+      Link: cf.App.Link,
       // Logo: "https://katip.hiyali.org/assets/logo.png",
-      Copyright: prdConf.Copyright(),
+      Copyright: cf.AppCopyright(),
     },
   }
 }
 
 func SendRegisterConfirmEmail(userEmail string, userName string, token string) (err error) {
+  cf := config.Get()
+
   // body
   hermesEmail := hermes.Email{
     Body: hermes.Body{
       Name: userName,
       Intros: []string{
-        "You have received this email because a register request for Katip account was received.",
+        "You have received this email because a register request for " + cf.App.Name + " account was received.",
       },
       Actions: []hermes.Action{
         {
@@ -74,12 +41,12 @@ func SendRegisterConfirmEmail(userEmail string, userName string, token string) (
           Button: hermes.Button{
             Color: "#22BC66",
             Text:  "Confirm Register",
-            Link:  prdConf.Link + "api/register-confirm?token=" + token,
+            Link:  cf.App.Link + "api/register-confirm?token=" + token,
           },
         },
       },
       Outros: []string{
-        "If you did not request register the Katip, no further action is required on your part.",
+        "If you did not request register " + cf.App.Name + ", no further action is required on your part.",
       },
       Signature: "Thanks",
     },
@@ -100,9 +67,9 @@ func SendRegisterConfirmEmail(userEmail string, userName string, token string) (
 
   // header
   header := make(map[string]string)
-  header["From"] = "Katip Team" + "<" + emailConf.Address + ">"
+  header["From"] = cf.Email.Name + "<" + cf.Email.Address + ">"
   header["To"] = userEmail
-  header["Subject"] = "You are bing register the Katip."
+  header["Subject"] = "You are bing register " + cf.App.Name
   header["Content-Type"] = "text/html; charset=UTF-8"
 
   // message
@@ -113,8 +80,8 @@ func SendRegisterConfirmEmail(userEmail string, userName string, token string) (
   message += "\r\n" + emailBody
 
   // send it
-  auth := smtp.PlainAuth("", emailConf.Address, emailConf.Password, emailConf.ServerHost)
-  if err = SendMailUsingTLS(emailConf.HostName(), auth, emailConf.Address, []string{userEmail}, []byte(message)); err != nil {
+  auth := smtp.PlainAuth("", cf.Email.Address, cf.Email.Password, cf.Email.ServerHost)
+  if err = SendMailUsingTLS(cf.EmailHostName(), auth, cf.Email.Address, []string{userEmail}, []byte(message)); err != nil {
     return
   }
   return nil
