@@ -4,6 +4,9 @@ The KATIP is a tool which will provide a securable text storage service support 
 ## Demo
 [Katip product](https://katip.hiyali.org)
 
+## Front end project
+[github.com/hiyali/katip-fe](https://github.com/hiyali/katip-fe)
+
 ## Requirements
 * Golang > 1.9
 * MySQL > 5.7
