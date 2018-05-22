@@ -1,6 +1,7 @@
 package handlers
 
 import (
+  "fmt"
   "time"
   "net/http"
 
@@ -19,6 +20,8 @@ import (
 
 return [record...]
 */
+
+const RecordMaxCount = 20
 
 func RecordGetAllPageable(c echo.Context) (err error) {
   pageable := new(config.ParamPageable)
@@ -62,8 +65,23 @@ func RecordCreateOne(c echo.Context) (err error) {
     })
   }
 
+  db := config.GetDB()
+  defer db.Close()
+
   user := c.Get("user").(*jwt.Token)
   claims := user.Claims.(*config.JwtCustomClaims)
+
+  var count uint
+  if err := db.Model(&config.Record{}).Where("creator_id = ?", claims.ID).Count(&count).Error; err != nil {
+    return c.JSON(http.StatusInternalServerError, echo.Map{
+      "message": err,
+    })
+  }
+  if count >= RecordMaxCount {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": fmt.Sprintf("The user cannot create more than %d records", RecordMaxCount),
+    })
+  }
 
   recordInfo := config.Record{
     CreatorId: claims.ID,
@@ -74,9 +92,6 @@ func RecordCreateOne(c echo.Context) (err error) {
     Content: record.Content,
     Type: record.Type,
   }
-
-  db := config.GetDB()
-  defer db.Close()
 
   if err := db.Create(&recordInfo).Error; err != nil {
     return c.JSON(http.StatusBadRequest, echo.Map{
