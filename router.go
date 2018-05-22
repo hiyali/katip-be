@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/labstack/echo"
+  "github.com/labstack/echo"
   "github.com/labstack/echo/middleware"
 
   "github.com/hiyali/katip-be/config"
@@ -11,13 +11,6 @@ import (
 func routerRegister (e *echo.Echo) {
   // JWT config
   jwtConfig := config.GetJwtConfig()
-
-  // Allow Origins & Methods
-  e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-    Skipper:      middleware.DefaultSkipper,
-    AllowOrigins: []string{"*"},
-    AllowMethods: []string{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE, echo.OPTIONS},
-  }))
 
   // Ping
   e.GET("/api/ping", handlers.Ping)
