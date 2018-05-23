@@ -38,8 +38,8 @@ go build
 ```
 
 ## TODO
-[] User update information & change password
-[] User avatar
+* [ ] User update information & change password & avatar
+* [ ] Security (maybe use Symmetric Searchable Encryption)
 
 ## Contribute
 > Feel free
