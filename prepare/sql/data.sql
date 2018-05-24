@@ -60,6 +60,7 @@ CREATE TABLE `users` (
   `email` varchar(100) NOT NULL,
   `password` varchar(64) NOT NULL,
   `name` varchar(64) NOT NULL,
+  `avatar_url` varchar(256) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
@@ -73,7 +74,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'hiyali920@gmail.com','$2a$10$u8/65CcvmYJMV5l8w/8Or..h4pB.3m4KCdemBY788UCRr54GDjIfW','Salam Hiyali','2018-05-13 23:58:00',NULL,NULL),(10,'308761816@qq.com','$2a$10$vHpGZn50aiGQfdFOF34pBeF88RV4pBSsMJMojLpWJxEHEFzAbiDRS','Salamjan','2018-05-13 16:30:34','2018-05-13 16:30:34',NULL);
+INSERT INTO `users` VALUES (1,'hiyali920@gmail.com','$2a$10$u8/65CcvmYJMV5l8w/8Or..h4pB.3m4KCdemBY788UCRr54GDjIfW','Salam Hiyali','','2018-05-13 23:58:00',NULL,NULL),(10,'308761816@qq.com','$2a$10$vHpGZn50aiGQfdFOF34pBeF88RV4pBSsMJMojLpWJxEHEFzAbiDRS','Salamjan','','2018-05-13 16:30:34','2018-05-13 16:30:34',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

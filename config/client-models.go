@@ -1,38 +1,39 @@
 package config
 
-import "time"
-
 type (
   JsonUser struct {
     ID        uint `gorm:"primary_key" json:"id" valid:"-"`
 
-    Name      string  `gorm:"type:varchar(64);not null" json:"name" form:"name" valid:"required"`
-    Email     string  `gorm:"type:varchar(100);unique_index;not null" json:"email" form:"email" valid:"required,email"`
-  }
-  JsonUserPut struct {
-    UpdatedAt time.Time
-
-    Name      string  `gorm:"type:varchar(64);not null" json:"name" form:"name" valid:"optional"`
-    Password  string  `gorm:"type:varchar(64);not null" form:"password" valid:"optional,length(6|20)"`
+    Name      string  `gorm:"type:varchar(64);not null" json:"name" valid:"required"`
+    Email     string  `gorm:"type:varchar(100);unique_index;not null" json:"email" valid:"required,email"`
+    AvatarUrl string  `gorm:"type:varchar(256)" json:"avatar_url" valid:"optional,url"`
   }
   JsonUserPost struct {
-    Name      string  `gorm:"type:varchar(64);not null" json:"name" form:"name" valid:"optional"`
-    Email     string  `gorm:"type:varchar(100);unique_index;not null" json:"email" form:"email" valid:"required,email"`
-    Password  string  `gorm:"type:varchar(64);not null" form:"password" valid:"optional,length(6|20)"`
+    Name      string  `gorm:"type:varchar(64);not null" json:"name" valid:"optional"`
+    Email     string  `gorm:"type:varchar(100);unique_index;not null" json:"email" valid:"required,email"`
+    Password  string  `gorm:"type:varchar(64);not null" json:"password" valid:"optional,length(6|20)"`
+  }
+  JsonUserPut struct {
+    Name      string  `gorm:"type:varchar(64);not null" json:"name" valid:"optional"`
+    AvatarUrl string  `gorm:"type:varchar(256)" json:"avatar_url" valid:"optional,url"`
+  }
+  JsonUserChangePassword struct {
+    Password	string  `gorm:"type:varchar(64);not null" valid:"required,length(6|20)"`
+    NewPassword string  `gorm:"type:varchar(64);not null" json:"new_password" valid:"required,length(6|20)"`
   }
 
   JsonRecord struct {
     ID        uint `gorm:"primary_key" json:"id" valid:"-"`
 
-    Title     string  `gorm:"type:varchar(100)" form:"title" json:"title" valid:"required"`
-    Content   string  `gorm:"type:varchar(2048)" form:"content" json:"content" valid:"-"`
+    Title     string  `gorm:"type:varchar(100)" json:"title" valid:"required"`
+    Content   string  `gorm:"type:varchar(2048)" json:"content" valid:"-"`
     Type      string  `gorm:"type:varchar(20)" json:"type" valid:"required,in(PASSWORD|TEXT|KEY)"`
-    IconUrl   string  `gorm:"type:varchar(256)" form:"icon_url" json:"icon_url" valid:"optional,url"`
+    IconUrl   string  `gorm:"type:varchar(256)" json:"icon_url" valid:"optional,url"`
   }
 
   JsonLogin struct {
-    Email     string `form:"email" valid:"required,email"`
-    Password  string `form:"password" valid:"required,length(6|20)"`
+    Email     string `valid:"required,email"`
+    Password  string `valid:"required,length(6|20)"`
   }
 
   ParamPageable struct {

@@ -70,6 +70,7 @@ func AuthLogin(c echo.Context) (err error) {
       ID: user.ID,
       Name: user.Name,
       Email: user.Email,
+      AvatarUrl: user.AvatarUrl,
     },
   })
 }

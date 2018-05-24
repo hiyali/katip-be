@@ -24,8 +24,9 @@ func routerRegister (e *echo.Echo) {
   // User Group (need login)
   ug := e.Group("/api/user")
   ug.Use(middleware.JWTWithConfig(jwtConfig))
-  ug.GET("", handlers.UserGetOne)
-  ug.PUT("", handlers.UserUpdateOne)
+  ug.GET("", handlers.UserGetInfo)
+  ug.PUT("", handlers.UserUpdateInfo)
+  ug.PUT("/change-password", handlers.UserChangePassword)
   // ug.POST("/logout", handlers.UserLogout) // server side logout
 
   // Record Group (need login)

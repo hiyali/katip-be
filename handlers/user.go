@@ -152,7 +152,7 @@ func UserRegisterConfirm(c echo.Context) (err error) {
   })
 }
 
-func UserGetOne(c echo.Context) (err error) {
+func UserGetInfo(c echo.Context) (err error) {
   loginUser := c.Get("user").(*jwt.Token)
   claims := loginUser.Claims.(*config.JwtCustomClaims)
 
@@ -169,11 +169,12 @@ func UserGetOne(c echo.Context) (err error) {
       claims.ID,
       user.Name,
       claims.Email,
+      user.AvatarUrl,
     })
   }
 }
 
-func UserUpdateOne(c echo.Context) (err error) {
+func UserUpdateInfo(c echo.Context) (err error) {
   user := new(config.JsonUserPut)
   if err = c.Bind(user); err != nil {
     return c.JSON(http.StatusBadRequest, echo.Map{
@@ -192,20 +193,57 @@ func UserUpdateOne(c echo.Context) (err error) {
   db := config.GetDB()
   defer db.Close()
 
-  if len(user.Password) > 0 {
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-    if err != nil {
-      return c.JSON(http.StatusInternalServerError, echo.Map{
-        "message": err,
-      })
-    }
-    user.Password = string(hashedPassword)
-  }
-
-  user.UpdatedAt = time.Now()
   var userModel config.User
   if err := db.Model(&userModel).Where("id = ?", claims.ID).Updates(user).Error; err != nil {
     return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
+  } else {
+    return c.JSON(http.StatusOK, echo.Map{})
+  }
+}
+
+func UserChangePassword(c echo.Context) (err error) {
+  passwordInfo := new(config.JsonUserChangePassword)
+  if err = c.Bind(passwordInfo); err != nil {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
+  }
+  if err = c.Validate(passwordInfo); err != nil {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": err,
+    })
+  }
+
+  loginUser := c.Get("user").(*jwt.Token)
+  claims := loginUser.Claims.(*config.JwtCustomClaims)
+
+  db := config.GetDB()
+  defer db.Close()
+
+  var user config.User
+  if err = db.Where("id = ?", claims.ID).First(&user).Error; err != nil {
+    return c.JSON(http.StatusInternalServerError, echo.Map{
+      "message": err,
+    })
+  }
+
+  if err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(passwordInfo.Password)); err != nil {
+    return c.JSON(http.StatusBadRequest, echo.Map{
+      "message": "Password is not correct.",
+    })
+  }
+
+  hashedPassword, err := bcrypt.GenerateFromPassword([]byte(passwordInfo.NewPassword), bcrypt.DefaultCost)
+  if err != nil {
+    return c.JSON(http.StatusInternalServerError, echo.Map{
+      "message": err,
+    })
+  }
+
+  if err := db.Model(&user).Where("id = ?", claims.ID).Update("password", string(hashedPassword)).Error; err != nil {
+    return c.JSON(http.StatusInternalServerError, echo.Map{
       "message": err,
     })
   } else {
