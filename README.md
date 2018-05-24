@@ -1,12 +1,15 @@
 # Katip - Back End
-The KATIP is a tool which will provide a securable text storage service support for individuals
+The KATIP is a tool which will provide a securable text storage service for individuals
 
 ## Demo
-(Katip product)[https://katip.hiyali.org]
+[Katip product](https://katip.hiyali.org)
+
+## Front end project
+[github.com/hiyali/katip-fe](https://github.com/hiyali/katip-fe)
 
 ## Requirements
-* Golang > 1.9
-* MySQL > 5.7
+* Golang >= 1.9
+* MySQL >= 5.7
 
 ## Install
 ```shell
@@ -35,8 +38,8 @@ go build
 ```
 
 ## TODO
-[] User update information & change password
-[] User avatar
+* [ ] User update information & change password & avatar
+* [ ] Security (maybe use Symmetric Searchable Encryption)
 
 ## Contribute
 > Feel free
