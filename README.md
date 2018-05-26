@@ -38,7 +38,12 @@ go build
 ```
 
 ## TODO
-* [ ] User update information & change password & avatar
+* [x] User login & register with an email address
+* [x] Send a email over TLS
+* [x] Add & edit & show records
+* [x] User update information & change password & avatar
+* [x] User recover password with email address
+* [ ] Design a logo for Katip
 * [ ] Security (maybe use Symmetric Searchable Encryption)
 
 ## Contribute
