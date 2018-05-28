@@ -46,6 +46,7 @@ go build
 * [ ] User recover password with email address
 * [ ] Design a logo for Katip
 * [ ] Security (maybe use Symmetric Searchable Encryption)
+* [ ] Dockerize
 
 ## Contribute
 > Feel free
