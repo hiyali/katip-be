@@ -43,7 +43,7 @@ go build
 * [x] Add & edit & show records
 * [x] Filter the records by title & type 
 * [x] User update information & change password & avatar
-* [ ] User recover password with email address
+* [ ] User reset password with email address
 * [ ] Design a logo for Katip
 * [ ] Security (maybe use Symmetric Searchable Encryption)
 * [ ] Dockerize
