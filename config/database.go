@@ -1,15 +1,15 @@
 package config
 
 import (
-  "fmt"
+	"fmt"
 
-  "github.com/jinzhu/gorm"
-  _ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 func GetDB() *gorm.DB {
-  // db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1?charset=utf8&parseTime=True&loc=Local")
-  db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1?charset=utf8&parseTime=true")
+	// db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1?charset=utf8&parseTime=true")
 	// db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
 	// [username[:password]@][protocol[(address)]]/dbname[?param1=value1&...&paramN=valueN]
 	if err != nil {
@@ -41,16 +41,16 @@ func GetDB() *gorm.DB {
 
 	// gorm Transaction example ----------------------------------------------
 	/*
-		// begin a transaction
-		tx := db.Begin()
-		// do some database operations in the transaction (use 'tx' from this point, not 'db')
-		tx.Create(...)
-		// ...
-		// rollback the transaction in case of error
-		tx.Rollback()
-		// Or commit the transaction
-		tx.Commit()
-		// gorm Transaction example ----------------------------------------------
+	  // begin a transaction
+	  tx := db.Begin()
+	  // do some database operations in the transaction (use 'tx' from this point, not 'db')
+	  tx.Create(...)
+	  // ...
+	  // rollback the transaction in case of error
+	  tx.Rollback()
+	  // Or commit the transaction
+	  tx.Commit()
+	  // gorm Transaction example ----------------------------------------------
 	*/
 
 	return db
