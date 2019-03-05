@@ -8,12 +8,13 @@ import (
 )
 
 func GetDB() *gorm.DB {
-	// db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1?charset=utf8&parseTime=True&loc=Local")
-	db, err := gorm.Open("mysql", "katip_mysql_admin:katip_v1_pass@/katip_v1?charset=utf8&parseTime=true")
+	cf := Get() // config from config.yml
+
+	db, err := gorm.Open("mysql", fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=true", cf.DB.User, cf.DB.Password, cf.DB.Name))
 	// db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
 	// [username[:password]@][protocol[(address)]]/dbname[?param1=value1&...&paramN=valueN]
 	if err != nil {
-		fmt.Printf("error %v\n", err)
+		fmt.Printf("%v\n", err)
 		panic("failed to connect database")
 	}
 
