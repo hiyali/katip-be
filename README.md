@@ -41,7 +41,7 @@ go build
 * [x] User login & register with an email address
 * [x] Send a email over TLS
 * [x] Add & edit & show records
-* [x] Filter the records by title & type 
+* [x] Filter the records by title & type
 * [x] User update information & change password & avatar
 * [ ] User reset password with email address
 * [ ] Design a logo for Katip
@@ -50,6 +50,10 @@ go build
 
 ## Contribute
 > Feel free
+
+## Screenshot
+![black-theme](https://raw.githubusercontent.com/hiyali/katip-be/master/screenshot/katip-black-theme.png "black-theme")
+![record-list](https://raw.githubusercontent.com/hiyali/katip-be/master/screenshot/katip-record-list.png "record-list")
 
 ## License
 MIT
