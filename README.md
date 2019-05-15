@@ -8,19 +8,12 @@ The KATIP is a tool which will provide a securable text storage service for indi
 [github.com/hiyali/katip-fe](https://github.com/hiyali/katip-fe)
 
 ## Requirements
-* Golang >= 1.9
-* MySQL >= 5.7
+* Golang 1.9+
+* MySQL 5.7+
 
 ## Install
 ```shell
 go get github.com/hiyali/katip-be/...
-```
-
-## Database prepare
-```shell
-./prepare/sh/create_mysql_user.sh katip_mysql_admin katip_v1_pass
-./prepare/sh/create_datebase.sh katip_v1
-./prepare/sh/sql_write_in.sh katip_v1
 ```
 
 ## Config
@@ -29,12 +22,13 @@ cd $GOPATH/src/github.com/hiyali/katip-be
 cp config_example.yml config.yml
 ```
 
-Write your configurations in `config.yml`
+#### Write your configurations in `config.yml`
 
-## Build & Run
+## Docker
+> Default user name and password is `hiyali920@gmail.com` `non-secure`, Change `prepare/sql/model-data.sql` if necessry.
 ```shell
-go build
-./katip-be
+docker build --rm -t katip-be:v1 ./
+docker run -d katip-be:v1 # -it # for foreground
 ```
 
 ## TODO
@@ -43,10 +37,10 @@ go build
 * [x] Add & edit & show records
 * [x] Filter the records by title & type
 * [x] User update information & change password & avatar
-* [ ] User reset password with email address
+* [x] User reset password with email address (not tested)
 * [ ] Design a logo for Katip
 * [ ] Security (maybe use Symmetric Searchable Encryption)
-* [ ] Dockerize
+* [x] Dockerize
 
 ## Contribute
 > Feel free

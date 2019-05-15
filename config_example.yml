@@ -3,6 +3,7 @@ app:
   link:   https://katip.hiyali.org/
   secret: katip_known_secret
 
+# don't change db area if can't hold whole things
 db:
   name:     katip_v1
   user:     katip_mysql_admin

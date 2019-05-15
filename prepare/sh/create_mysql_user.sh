@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # shell example:
 # function how_many {
 #   echo "$# arguments were supplied."
@@ -20,7 +20,7 @@ create_mysql_user () {
 
   echo "Ready to create user $1 @ $PLACE"
   echo "Please enter mysql root passowrd"
-  echo "CREATE USER '$USERNAME'@'$PLACE' IDENTIFIED BY '$PASSWORD';GRANT ALL PRIVILEGES ON *.* TO '$USERNAME'@'$PLACE' WITH GRANT OPTION;" | mysql -u root -p
+  echo "CREATE USER '$USERNAME'@'$PLACE' IDENTIFIED BY '$PASSWORD';GRANT ALL PRIVILEGES ON *.* TO '$USERNAME'@'$PLACE' WITH GRANT OPTION;" | mysql -u root --passowrd="${DB_ROOT_PASS}"
 }
 
 if [ $1 ]; then
