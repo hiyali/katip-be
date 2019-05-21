@@ -20,6 +20,7 @@ go get github.com/hiyali/katip-be/...
 ```shell
 cd $GOPATH/src/github.com/hiyali/katip-be
 cp config_example.yml config.yml
+./prepare/sh/generate_nginx_conf.sh hiyali.org # replace with your domain (without www.)
 ```
 
 #### Write your configurations in `config.yml`
@@ -28,7 +29,7 @@ cp config_example.yml config.yml
 > Default user name and password is `hiyali920@gmail.com` `non-secure`, Change `prepare/sql/model-data.sql` if necessry.
 ```shell
 docker build --rm -t katip-be:v1 ./
-docker run -d katip-be:v1 # -it # for foreground
+docker run -d -p 80:80 katip-be:v1 # replace -d to -it # for foreground (Detach: Ctrl+p - Ctrl+q)
 ```
 
 ## TODO

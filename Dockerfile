@@ -6,12 +6,12 @@
 # 54.175.43.85    registry-1.docker.io
 FROM alpine:3.9.4
 MAINTAINER Salam Hiyali "hiyali920@gmail.com"
-ENV REFRESHED_AT 2019-05-15
+ENV REFRESHED_AT 2019-05-21
 
 # remove this block (if you're not in China)
-RUN echo "#aliyun" > /etc/apk/repositories
-RUN echo "https://mirrors.aliyun.com/alpine/v3.6/main/" >> /etc/apk/repositories
-RUN echo "https://mirrors.aliyun.com/alpine/v3.6/community/" >> /etc/apk/repositories
+# RUN echo "#aliyun" > /etc/apk/repositories
+# RUN echo "https://mirrors.aliyun.com/alpine/v3.6/main/" >> /etc/apk/repositories
+# RUN echo "https://mirrors.aliyun.com/alpine/v3.6/community/" >> /etc/apk/repositories
 
 # update
 RUN apk update
@@ -22,6 +22,7 @@ RUN apk add git make
 RUN apk add ca-certificates  # ca-certificates & ssh for git clone
 RUN apk add tzdata  # for set timezone
 RUN apk add vim # The reason is that for edit file in docker sometimes
+RUN apk add nginx
 # RUN apk add curl
 # RUN apk add cron
 
@@ -33,6 +34,7 @@ RUN apk add --no-cache musl-dev go
 # -- config
 ENV GOROOT /usr/lib/go
 ENV GOPATH /go
+# ENV GO111MODULE on
 ENV PATH /go/bin:$PATH
 RUN mkdir -p ${GOPATH}/src ${GOPATH}/bin
 # -- mysql
@@ -54,6 +56,7 @@ RUN mkdir -p ./logs
 COPY prepare/sh/* ./
 RUN chmod +x *.sh
 COPY prepare/sql/model-data.sql ./data.sql
+COPY prepare/config/katip.conf /etc/nginx/sites-available/
 
 # ------------------------- Finish
 # clear

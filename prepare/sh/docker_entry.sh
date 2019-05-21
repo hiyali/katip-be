@@ -39,10 +39,15 @@ rc-update add mariadb default
 echo 'MySql complete......'
 
 # --------------------------- Golang
-go get github.com/hiyali/katip-be/...
+go get github.com/hiyali/katip-be
 cd $GOPATH/src/github.com/hiyali/katip-be/
+export GO111MODULE=on
+go get ./...
 go build 2>&1 >> $LOGDIR
 ./katip-be
+
+# --------------------------- Nginx
+service nginx restart
 
 # --------------------------- Finish
 /bin/sh
