@@ -44,10 +44,10 @@ cd $GOPATH/src/github.com/hiyali/katip-be/
 export GO111MODULE=on
 go get ./...
 go build 2>&1 >> $LOGDIR
-./katip-be
+./katip-be &
 
-# --------------------------- Nginx
-service nginx restart
+# --------------------------- Finish
+nginx
 
 # --------------------------- Finish
 /bin/sh

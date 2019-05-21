@@ -16,13 +16,33 @@ ENV REFRESHED_AT 2019-05-21
 # update
 RUN apk update
 
+# add openrc
+#RUN apk add openrc &&\
+# Tell openrc its running inside a container, till now that has meant LXC
+#    sed -i 's/#rc_sys=""/rc_sys="lxc"/g' /etc/rc.conf &&\
+# Tell openrc loopback and net are already there, since docker handles the networking
+#    echo 'rc_provide="loopback net"' >> /etc/rc.conf &&\
+# no need for loggers
+#    sed -i 's/^#\(rc_logger="YES"\)$/\1/' /etc/rc.conf &&\
+# can't get ttys unless you run the container in privileged mode
+#    sed -i '/tty/d' /etc/inittab &&\
+# can't set hostname since docker sets it
+#    sed -i 's/hostname $opts/# hostname $opts/g' /etc/init.d/hostname &&\
+# can't mount tmpfs since not privileged
+#    sed -i 's/mount -t tmpfs/# mount -t tmpfs/g' /lib/rc/sh/init.sh &&\
+# can't do cgroups
+#    sed -i 's/cgroup_add_service /# cgroup_add_service /g' /lib/rc/sh/openrc-run.sh
+#CMD ["/sbin/init"]
+#VOLUME ["/sys/fs/cgroup"]
+
 # add basic deps
-RUN apk add openrc --no-cache
+RUN apk add --no-cache openrc
 RUN apk add git make
 RUN apk add ca-certificates  # ca-certificates & ssh for git clone
 RUN apk add tzdata  # for set timezone
 RUN apk add vim # The reason is that for edit file in docker sometimes
 RUN apk add nginx
+RUN apk add tmux
 # RUN apk add curl
 # RUN apk add cron
 
@@ -55,8 +75,11 @@ RUN mkdir -p ./logs
 
 COPY prepare/sh/* ./
 RUN chmod +x *.sh
+
 COPY prepare/sql/model-data.sql ./data.sql
-COPY prepare/config/katip.conf /etc/nginx/sites-available/
+
+COPY prepare/config/katip.conf /etc/nginx/conf.d/default.conf
+RUN mkdir -p /run/nginx
 
 # ------------------------- Finish
 # clear

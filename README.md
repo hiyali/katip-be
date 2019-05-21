@@ -8,29 +8,35 @@ The KATIP is a tool which will provide a securable text storage service for indi
 [github.com/hiyali/katip-fe](https://github.com/hiyali/katip-fe)
 
 ## Requirements
-* Golang 1.9+
-* MySQL 5.7+
+* Docker
 
 ## Install
 ```shell
-go get github.com/hiyali/katip-be/...
+curl -fsSL https://get.docker.com -o get-docker.sh
+sh get-docker.sh
+```
+
+```shell
+git clone https://github.com/hiyali/katip-be
 ```
 
 ## Config
 ```shell
-cd $GOPATH/src/github.com/hiyali/katip-be
-cp config_example.yml config.yml
+cd katip-be
 ./prepare/sh/generate_nginx_conf.sh hiyali.org # replace with your domain (without www.)
+cp config_example.yml config.yml
 ```
 
 #### Write your configurations in `config.yml`
 
 ## Docker
-> Default user name and password is `hiyali920@gmail.com` `non-secure`, Change `prepare/sql/model-data.sql` if necessry.
+> Default user name and password is `hiyali920@gmail.com` `non-secure`, Change `prepare/sql/model-data.sql` if necessary.
 ```shell
-docker build --rm -t katip-be:v1 ./
-docker run -d -p 80:80 katip-be:v1 # replace -d to -it # for foreground (Detach: Ctrl+p - Ctrl+q)
+docker build --rm -t katip:v1 ./
+docker run --name katip --rm -id -p 80:80 -p 443:443 katip:v1
 ```
+> replace `-id` to `-it` for foreground run and use `Ctrl+p` - `Ctrl+q` to detach
+It will take a few minutes... and `curl -G localhost/api/ping`
 
 ## TODO
 * [x] User login & register with an email address

@@ -4,10 +4,9 @@ upstream back_end {
 }
 
 server {
-  listen        80;
-  # listen      [::]:80 default ipv6only=on;
-  server_name   {{DOMAIN}} www.{{DOMAIN}} localhost;
-  # rewrite ^/(.*)$ https://{{DOMAIN}}/$1 permanent;
+  listen        443 ssl http2;
+  # listen      [::]:443 default ipv6only=on;
+  server_name   {{DOMAIN}} www.{{DOMAIN}};
 
   root          /katip/fe;
   index         index.html;
@@ -27,4 +26,13 @@ server {
     add_header  Cache-Control public;
     access_log  off;
   }
+
+  ssl on;
+  ssl_certificate     /etc/letsencrypt/live/{{DOMAIN}}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{DOMAIN}}/privkey.pem;
+
+  ssl_session_timeout 5m;
+  ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers "HIGH:!aNULL:!MD5 or HIGH:!aNULL:!MD5:!3DES";
+  ssl_prefer_server_ciphers on;
 }
