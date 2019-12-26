@@ -1,6 +1,6 @@
 package config
 
-import "github.com/labstack/echo/middleware"
+import "github.com/labstack/echo/v4/middleware"
 
 func GetJwtConfig() middleware.JWTConfig {
 	cf := Get()
