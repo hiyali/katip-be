@@ -1,0 +1,46 @@
+# tmuxinator project file - for the PMM project
+# cp this file to ~/.tmuxinator/a.yml
+# and use it: mux a
+#
+# with: crontab -e
+# PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# SHELL=/bin/bash
+# @reboot ubuntu mux a
+
+tmux_options: -f ~/katip-be/config/.tmux.conf
+startup_window: BE
+startup_pane: 1
+
+# Runs before everything. Use it to start daemons etc.
+# pre: sudo /etc/rc.d/mysqld start
+
+# attach: false
+# post: tmux -CC attach -t b
+
+name: Katip(jp)
+root: ~/
+
+windows:
+  - Home:
+      panes:
+        - echo "du -sch pmm/downloads/* | sort -h"
+        - df -h
+  - BE:
+      root: ~/katip-be/
+      panes:
+        - echo "go build"
+        - ./katip-be
+  - Service:
+      root: ~/
+      panes:
+        - echo "mysql -u root -p"
+  - FE:
+      root: ~/katip-fe/
+      panes:
+        - 
+  - Nginx:
+      root: /etc/nginx
+      panes:
+        - sudo -s
+        - sudo -s
+        - sudo -s && cd /etc/letsencrypt && echo "update https" && crontab -l
