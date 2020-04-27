@@ -14,7 +14,7 @@ create_datebase () {
   if [ $1 ]; then
     DATABASE_NAME=$1
     echo "create_datebase $DATABASE_NAME"
-    echo "create database $DATABASE_NAME" | mysql -u $DB_USER --password="${DB_PASS}"
+    echo "create database $DATABASE_NAME" | mysql -u $DB_USER -p # --password="${DB_PASS}"
   else
     echo "Please enter database name follow sh file first"
   fi

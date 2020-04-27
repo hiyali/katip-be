@@ -57,7 +57,8 @@ func AuthLogin(c echo.Context) (err error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Generate encoded token and send it as response.
-	t, err := token.SignedString([]byte("katip_known_secret"))
+	cf := config.Get()
+	t, err := token.SignedString([]byte(cf.App.Secret))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{
 			"message": err,
