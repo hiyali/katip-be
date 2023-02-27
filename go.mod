@@ -15,20 +15,16 @@ require (
 	github.com/jinzhu/configor v1.1.1
 	github.com/jinzhu/gorm v1.9.11
 	github.com/kr/pretty v0.1.0 // indirect
-	github.com/labstack/echo/v4 v4.1.11
+	github.com/labstack/echo/v4 v4.9.0
 	github.com/matcornic/hermes v1.2.0
-	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/mattn/go-isatty v0.0.11 // indirect
 	github.com/mitchellh/copystructure v1.0.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.4 // indirect
 	github.com/roylee0704/gron v0.0.0-20160621042432-e78485adab46
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
-	github.com/valyala/fasttemplate v1.1.0 // indirect
 	golang.org/x/crypto v0.1.0
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.1.0 // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/russross/blackfriday.v2 v2.0.1 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
