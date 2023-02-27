@@ -2,7 +2,7 @@ module github.com/hiyali/katip-be
 
 require (
 	cloud.google.com/go v0.39.0 // indirect
-	github.com/Masterminds/goutils v1.1.0 // indirect
+	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/Masterminds/sprig v2.22.0+incompatible // indirect
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a
@@ -28,7 +28,6 @@ require (
 	github.com/valyala/fasttemplate v1.1.0 // indirect
 	golang.org/x/crypto v0.1.0
 	golang.org/x/net v0.7.0 // indirect
-	golang.org/x/sys v0.1.0 // indirect
 	google.golang.org/appengine v1.6.5 // indirect
 	gopkg.in/russross/blackfriday.v2 v2.0.1 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
